@@ -1,0 +1,18 @@
+﻿@model List<Duanmau.Web.API.Models.Food>
+<div class="row" style="margin-top: 15px;">
+    @foreach (var food in Model)
+    {
+        <div class="col-4" style="padding: 10px;">
+            <div class="card" style="width: 100%;" onclick="selectFood('@food.FoodName', '@food.Price', '@food.FoodId')">
+                <img src="@food.File" class="card-img-top" style="max-height: 150px; object-fit: cover;">
+                <div class="card-body text-center" style="padding: 5px;">
+                    <!-- Thêm style padding để làm cho phần nội dung nhỏ lại -->
+                    <button>
+                        @food.FoodName <br>
+                        @food.Price K
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>

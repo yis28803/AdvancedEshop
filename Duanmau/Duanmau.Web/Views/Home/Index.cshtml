@@ -1,0 +1,326 @@
+﻿@model (int?, List<Duanmau.Web.API.Models.DanhMucFood>)
+@if (TempData["SuccessMessage"] != null)
+{
+    <div id="successMessage" class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="close" onclick="closeAlert()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+@if (Model.Item1.HasValue)
+{
+    @* <p>ID người dùng: @Model.Item1.Value</p> *@
+    <form method="post" action="/Home/Logout">
+        <button type="submit">Đăng xuất</button>
+    </form>
+}
+else
+{
+    @* <p>Người dùng chưa đăng nhập</p> *@
+    <a href="/Account2/Login">Đăng nhập</a>
+}
+
+
+
+<div class="row">
+    <div class="col">
+        <h2>Thông tin phòng/bàn: </h2>
+        <button style="margin-left: 30px;" id="btnAllTableFoods"> Tất cả</button>
+        <button style="margin-left: 10px; color: blue;" id="btnActiveTable"><i class="fa-solid fa-house"></i></button>
+        <button style="margin-left: 10px; color: black" id="btnInactiveTable"><i class="fa-solid fa-house"></i></button>
+        <div id="tableFoodsContainer"></div>
+    </div>
+    <div class="col">
+        <h2>Danh mục thức ăn: </h2>
+        <button id="allProductsButton">Tất Cả</button>
+        @foreach (var danhMucFood in Model.Item2)
+        {
+            <button class="danhMucFoodButton" data-id="@danhMucFood.DanhMucFoodId">@danhMucFood.DanhMucFoodName</button>
+        }   
+        <div id="foodsContainer"></div>
+    </div>
+    
+    <div class="col">
+        <h2>Thông tin hóa đơn: </h2>
+        <p id="selectedTablefoodName">Bàn: </p>
+        <p style="display: none;" id="selectedTablefoodId">IDBàn: </p>
+        <input type="hidden" id="hiddenSelectedTablefoodId" name="selectedTablefoodId" />
+
+
+        <table class="table-bordered" style="width:100%; border-collapse: collapse; border: 2px solid black;">
+            <tr style="text-align: center;">
+                <th style="border: 2px solid black; width: 90px;">Tên món</th>
+                <th style="border: 2px solid black; width: 60px;">Số lượng</th>
+                <th style="border: 2px solid black; width: 140px;">Đơn giá</th>
+                <th style="border: 2px solid black; width: 110px;">Thành tiền</th>
+                <th style="border: 2px solid black; width: 130px;" colspan="2">Hành động</th>
+            </tr>
+
+
+        </table>
+        <fieldset id="foodTableFieldset" style="height: 700px; width: 100%;background-color: rgb(233, 233, 233); border: 0.3px solid black;">
+            <table id="foodTable" class="table-bordered" style="width:100%; border-collapse: collapse; border: 2px solid black;">
+            </table>
+        </fieldset>
+        <div class="row">
+            <div class="col">
+                <p id="totalValue">Tổng tiền: 0k</p>
+                <button onclick="lockTable()">Khóa bàn</button>
+                <button onclick="openCheckoutModal()">Thanh Toán</button>
+                <button onclick="clearTableDataMain()">Xóa dữ liệu</button>
+                <div style="margin-top: 20px;"></div> <!-- Thêm khoảng trống bằng margin-top -->
+                <form asp-controller="Home" asp-action="KhachHangCreate" method="get">
+                    <button type="submit" class="add-button"><i class="fa-solid fa-plus"></i> Thêm Khách Hàng</button>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="checkoutModalLabel">Checkout</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-rectangle-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Nội dung của trang _CheckoutPartial.cshtml sẽ được thêm vào đây -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        function openCheckoutModal() {
+            var idtablefood = $('#selectedTablefoodId').text().trim();
+            $.ajax({
+                url: '/Home/CheckoutPartial',
+                type: 'POST',
+                data: { tableData: JSON.stringify(tableData), idtablefood: idtablefood },
+                success: function (data) {
+                    $('#modalBody').html(data); // Thêm nội dung vào phần body của modal
+                    $('#checkoutModal').modal('show'); // Hiển thị modal
+                    clearTableData();
+                    openTable();
+                },
+                error: function () {
+                    alert('Đã xảy ra lỗi khi thanh toán.');
+                }
+            });
+        }
+        function closeAlert() {
+            $("#successMessage").alert('close');
+        }
+       
+        
+        function clearTableData() {
+            var selectedTablefoodId = document.getElementById("selectedTablefoodId").innerText.trim();
+            if (tableData) {
+                for (var key in tableData) {
+                    if (key === selectedTablefoodId) {
+                        delete tableData[key];
+                    }
+                }
+                localStorage.setItem('tableData', JSON.stringify(tableData));
+            }
+            alert('Đã xóa dữ liệu cho bàn có ID: ' + selectedTablefoodId);
+        }
+        function clearTableDataMain() {
+            var selectedTablefoodId = document.getElementById("selectedTablefoodId").innerText.trim();
+            if (tableData) {
+                for (var key in tableData) {
+                    if (key === selectedTablefoodId) {
+                        delete tableData[key];
+                    }
+                }
+                localStorage.setItem('tableData', JSON.stringify(tableData));
+            }
+            alert('Đã xóa dữ liệu cho bàn có ID: ' + selectedTablefoodId);
+            openTable();
+            window.location.reload();
+        }
+
+        var total = 0;
+        function selectFood(foodName, price, foodId) {
+            var fieldset = document.getElementById("foodTableFieldset");
+            var table = fieldset.getElementsByTagName("table")[0];
+            var newRow = table.insertRow();
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+            var cell4 = newRow.insertCell(3);
+            var cell5 = newRow.insertCell(4);
+            var cell6 = newRow.insertCell(5);
+            var cell7 = newRow.insertCell(6);
+
+            cell1.innerHTML = foodName;
+            cell2.innerHTML = "1";
+            cell3.innerHTML = price;
+            cell4.innerHTML = price;
+            cell5.innerHTML = '<button style="background-color: yellow;" onclick="editRow(this)">sửa</button>';
+            cell6.innerHTML = '<button style="background-color: red;" onclick="deleteRow(this)">xóa</button>';
+            cell7.innerHTML = '<input type="hidden" value="' + foodId + '">';
+
+            total += parseFloat(price);
+            updateTotal();
+        }
+
+        function editRow(button) {
+            var row = button.parentNode.parentNode;
+            var quantityCell = row.cells[1];
+            var priceCell = row.cells[2];
+            var totalPriceCell = row.cells[3];
+            var quantity = parseInt(quantityCell.innerHTML);
+            var price = parseFloat(priceCell.innerHTML);
+            var newQuantity = prompt("Nhập số lượng mới:", quantity);
+            if (newQuantity !== null) {
+                newQuantity = parseInt(newQuantity);
+                if (!isNaN(newQuantity) && newQuantity > 0) {
+                    var oldTotalPrice = parseFloat(totalPriceCell.innerHTML);
+                    quantityCell.innerHTML = newQuantity;
+                    totalPriceCell.innerHTML = (price * newQuantity).toFixed(2);
+                    var newTotalPrice = parseFloat(totalPriceCell.innerHTML);
+                    total = total - oldTotalPrice + newTotalPrice;
+                    updateTotal();
+                } else {
+                    alert("Số lượng không hợp lệ!");
+                }
+            }
+        }
+        function deleteRow(button) {
+            var row = button.parentNode.parentNode;
+            var totalPriceCell = row.cells[3];
+            total -= parseFloat(totalPriceCell.innerHTML);
+            updateTotal();
+
+            row.parentNode.removeChild(row);
+        }
+
+        function updateTotal() {
+            document.getElementById("totalValue").innerText = "Tổng tiền: " + total.toFixed(2) + "k";
+        }
+
+        var tableData = JSON.parse(localStorage.getItem('tableData')) || {};
+        function lockTable() {
+            var selectedTablefoodId = document.getElementById("selectedTablefoodId").innerText;
+
+            if (!(selectedTablefoodId in tableData)) {
+                tableData[selectedTablefoodId] = {
+                    foodTable: document.getElementById("foodTable").innerHTML,
+                    totalValue: document.getElementById("totalValue").innerText
+                };
+
+                localStorage.setItem('tableData', JSON.stringify(tableData));
+            }
+            $.ajax({
+                url: '/Home/LockTable',
+                type: 'POST',
+                data: { selectedTablefoodId: selectedTablefoodId },
+                success: function (data) {
+                    alert(data);
+                    location.reload();
+                },
+                error: function () {
+                    alert('Đã xảy ra lỗi khi khóa bàn.');
+                }
+            });
+        }
+        function openTable() {
+            var selectedTablefoodId = document.getElementById("selectedTablefoodId").innerText;
+            $.ajax({
+                url: '/Home/OpenTable',
+                type: 'POST',
+                data: { selectedTablefoodId: selectedTablefoodId },
+                success: function (data) {
+                    //alert(data);
+                    //location.reload();
+                },
+                error: function () {
+                    alert('Đã xảy ra lỗi khi khóa bàn.');
+                }
+            });
+        }
+        function selectTableFood(tablefoodName, tablefoodId) {
+            document.getElementById("selectedTablefoodName").innerText = tablefoodName;
+            document.getElementById("selectedTablefoodId").innerText = tablefoodId;
+            document.getElementById("hiddenSelectedTablefoodId").value = tablefoodId;
+            if (tableData.hasOwnProperty(tablefoodId)) {
+                document.getElementById("foodTable").innerHTML = tableData[tablefoodId].foodTable;
+                document.getElementById("totalValue").innerText = tableData[tablefoodId].totalValue;
+            } else {
+                document.getElementById("foodTable").innerHTML = '';
+                document.getElementById("totalValue").innerText = "Tổng tiền: 0k";
+            }
+        }
+        $(document).ready(function () {
+            $('#allProductsButton').click(function () {
+                $.ajax({
+                    url: '/Home/GetAllFoods',
+                    type: 'GET',
+                    success: function (data) {
+                        $('#foodsContainer').empty();
+                        $('#foodsContainer').html(data);
+                    },
+                    error: function () {
+                        alert('Không thể tải tất cả sản phẩm.');
+                    }
+                });
+            });
+
+
+            $('.danhMucFoodButton').click(function () {
+                var danhMucFoodId = $(this).data('id');
+                $.ajax({
+                    url: '/Home/GetFoodsByCategory',
+                    type: 'GET',
+                    data: { danhMucFoodId: danhMucFoodId },
+                    success: function (data) {
+                        $('#foodsContainer').empty();
+                        $('#foodsContainer').html(data);
+                    },
+                    error: function () {
+                        alert('Không có sản phẩm nào thuộc danh mục này.');
+                    }
+                });
+            });
+            $('#btnActiveTable').click(function () {
+                loadTableFoods(true);
+            });
+            $('#btnInactiveTable').click(function () {
+                loadTableFoods(false);
+            });
+            $('#btnAllTableFoods').click(function () {
+                loadAllTableFoods();
+            });
+        });
+        function loadAllTableFoods() {
+            $.ajax({
+                url: '/Home/GetAllTableFoods',
+                type: 'GET',
+                success: function (data) {
+                    $('#tableFoodsContainer').html(data);
+                },
+                error: function () {
+                    alert('Đã xảy ra lỗi khi tải danh sách phòng/bàn.');
+                }
+            });
+        }
+        function loadTableFoods(status) {
+            $.ajax({
+                url: '/Home/GetTableFoodsByStatus',
+                type: 'GET',
+                data: { status: status },
+                success: function (data) {
+                    $('#tableFoodsContainer').html(data);
+                },
+                error: function () {
+                    alert('Đã xảy ra lỗi khi tải danh sách phòng/bàn.');
+                }
+            });
+        }
+    </script>
+}

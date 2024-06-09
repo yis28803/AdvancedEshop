@@ -1,0 +1,99 @@
+﻿@model List<Duanmau.Web.API.Models.RevenueStatistics>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Thống kê doanh thu</title>
+    <!-- Add Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Thống kê doanh thu theo ngày</h1>
+
+    <!-- Dropdown để chọn tháng -->
+    <label for="selectedMonth">Chọn tháng:</label>
+    <select id="selectedMonth">
+        <option value="1">Tháng 1</option>
+        <option value="2">Tháng 2</option>
+        <option value="3">Tháng 3</option>
+        <option value="4">Tháng 4</option>
+        <option value="5">Tháng 5</option>
+        <option value="6">Tháng 6</option>
+        <option value="7">Tháng 7</option>
+        <option value="8">Tháng 8</option>
+        <option value="9">Tháng 9</option>
+        <option value="10">Tháng 10</option>
+        <option value="11">Tháng 11</option>
+        <option value="12">Tháng 12</option>
+
+        <!-- Thêm các tháng khác nếu cần -->
+    </select>
+
+    <!-- Nút để thực hiện lọc -->
+    <button onclick="filterData()">Lọc</button>
+    <!-- Nút button để chuyển sang trang ProductStatistics2.cshtml -->
+    <a class="btn btn-primary" href="/admin_thongke/ProductStatistics2">Xem Thống kê Sản phẩm theo Mỗi tháng</a>
+    <a class="btn btn-primary" href="/admin_thongke/ProductRevenueStatistics">Xem Thống kê Sản phẩm theo Tháng này</a>
+
+    <canvas id="revenueChart" width="400" height="150"></canvas>
+    
+
+    <script>
+        // Lấy dữ liệu từ Model và chuyển đổi thành mảng các ngày và doanh thu tương ứng
+        var dates = @Html.Raw(Json.Serialize(Model.Select(item => item.Date)));
+        var revenues = @Html.Raw(Json.Serialize(Model.Select(item => item.TotalRevenue)));
+
+        var ctx = document.getElementById('revenueChart').getContext('2d');
+        var revenueChart;
+
+        function updateChart(filteredDates, filteredRevenues) {
+            if (revenueChart) {
+                revenueChart.destroy(); // Hủy biểu đồ cũ trước khi vẽ biểu đồ mới
+            }
+
+            revenueChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: filteredDates.map(date => new Date(date).toLocaleDateString()),
+                    datasets: [{
+                        label: 'Doanh thu',
+                        data: filteredRevenues,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+
+        function filterData() {
+            var selectedMonth = document.getElementById("selectedMonth").value;
+
+            var filteredDates = [];
+            var filteredRevenues = [];
+
+            for (var i = 0; i < dates.length; i++) {
+                var date = new Date(dates[i]);
+                if (date.getMonth() + 1 == selectedMonth) {
+                    filteredDates.push(dates[i]);
+                    filteredRevenues.push(revenues[i]);
+                }
+            }
+
+            updateChart(filteredDates, filteredRevenues);
+        }
+
+        // Khởi tạo biểu đồ với dữ liệu ban đầu
+        updateChart(dates, revenues);
+    </script>
+</body>
+</html>

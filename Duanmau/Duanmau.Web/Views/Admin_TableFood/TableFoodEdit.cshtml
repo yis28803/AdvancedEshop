@@ -1,0 +1,78 @@
+﻿@model Duanmau.Web.API.Models.Tablefood
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chỉnh sửa Bàn ăn</title>
+    <!-- Add Bootstrap CSS link here -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <!-- Add your custom styles here -->
+</head>
+<body>
+    <style>
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style cho các label */
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        /* Style cho input và select */
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        h2 {
+            text-align: center; /* Căn giữa nội dung */
+            margin-top: 20px; /* Khoảng cách từ phía trên */
+        }
+
+        /* Style cho các nút */
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            button[type="submit"]:hover {
+                background-color: #45a049;
+            }
+    </style>
+
+    <h2>Sửa Bàn ăn</h2>
+    <form asp-controller="Admin_tablefood" asp-action="TableFoodSaveEdited" method="post">
+        <div class="form-group">
+            <label for="TablefoodName">Tên Bàn ăn:</label>
+            <input type="text" class="form-control" id="TablefoodName" name="TablefoodName" value="@Model.TablefoodName" required>
+        </div>
+        <div class="form-group">
+            <label for="Status">Trạng thái:</label>
+            <input type="checkbox" id="Status" name="Status" @(Model.Status ? "checked" : "") value="true">
+        </div>
+        <input type="hidden" asp-for="TablefoodId" />
+
+        <button type="submit" class="btn btn-primary">Lưu</button>
+        <a asp-controller="Admin_tablefood" asp-action="TableFoodAll" class="btn btn-secondary">Quay Lại</a>
+    </form>
+</body>
+</html>

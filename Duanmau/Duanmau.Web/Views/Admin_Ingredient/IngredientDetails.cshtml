@@ -1,0 +1,107 @@
+﻿<!-- Views/FoodDetails.cshtml -->
+@model Duanmau.Web.API.Models.Ingredient
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingredient Details</title>
+    <style>
+        /* Style cho phần tử div chứa thông tin chi tiết sản phẩm */
+        .Ingredient-details {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+
+            /* Style cho tiêu đề */
+            .Ingredient-details h4 {
+                color: #333;
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+
+            /* Style cho các thông tin sản phẩm */
+            .Ingredient-details p {
+                margin: 5px 0;
+                font-size: 16px;
+                color: #555;
+            }
+
+            /* Style cho nút Edit và Back */
+            .Ingredient-details form button {
+                margin-top: 10px;
+                padding: 8px 16px;
+                background-color: #4caf50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+                .Ingredient-details form button:hover {
+                    background-color: #45a049;
+                }
+
+        /* Style cho nút Edit và Back */
+        form button[type="submit"] {
+            margin-top: 10px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            form button[type="submit"]:hover {
+                opacity: 0.8; /* Hiệu ứng mờ khi di chuột qua */
+            }
+
+        /* Định dạng nút Edit */
+        form[action="IngredientFood"] button[type="submit"] {
+            background-color: #4caf50; /* Màu nền cho nút Edit */
+            color: white; /* Màu chữ cho nút Edit */
+        }
+
+        /* Định dạng nút Back */
+        form[action="IngredientAll"] button[type="submit"] {
+            background-color: #4caf50; /* Màu nền cho nút Back */
+            color: #333; /* Màu chữ cho nút Back */
+        }
+
+            /* Hover effect cho nút Back */
+            form[action="IngredientAll"] button[type="submit"]:hover {
+                background-color: #4caf50; /* Màu nền khi di chuột qua cho nút Back */
+            }
+
+    </style>
+</head>
+<body>
+    <!-- Phần mã HTML còn lại của bạn -->
+    <h3>Ingredient Details</h3>
+
+    @if (Model != null)
+    {
+        <div>
+            <p><strong>IngredientId:</strong> @Model.IngredientId</p>
+            <p><strong>IngredientName:</strong> @Model.IngredientName</p>
+            
+        </div>
+        <form asp-controller="Admin_ingredient" asp-action="IngredientEdit" method="get">
+            <input type="hidden" name="id" value="@Model.IngredientId" />
+            <button type="submit" style="background-color:#4caf50; color:white;">Edit</button>
+        </form>
+        <form asp-controller="Admin_ingredient" asp-action="IngredientAll" method="get">
+            <button type="submit" style="background-color:#4caf50; color:white;">Back</button>
+        </form>
+    }
+    else
+    {
+        <p>Ingredient not found.</p>
+    }
+</body>
+</html>

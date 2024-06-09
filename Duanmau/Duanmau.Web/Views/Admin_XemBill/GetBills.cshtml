@@ -1,0 +1,154 @@
+﻿@model List<Duanmau.Web.API.Models.BillViewModels3>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách hóa đơn</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #dddddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .nested-table {
+            margin-top: 10px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+            .nested-table th, .nested-table td {
+                border: 1px solid #dddddd;
+                padding: 8px;
+                text-align: left;
+            }
+    </style>
+</head>
+<body>
+    <h1>Danh sách hóa đơn</h1>
+
+    <label for="rowCount">Số dòng hiển thị:</label>
+    <select id="rowCount">
+        <option value="5">5</option>
+        <option value="10" selected>10</option>
+        <option value="20">20</option>
+    </select>
+
+    @if (Model != null && Model.Any())
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã hóa đơn</th>
+                    <th>Ngày check-in</th>
+                    <th>Ngày check-out</th>
+                    <th>Bàn ăn</th>
+                    <th>Nhân viên</th>
+                    <th>Khách hàng</th>
+                    <th>Tổng giá trị</th>
+                    <th>Chi tiết hóa đơn</th>
+                    <th>Xóa</th> <!-- Thêm cột cho nút "Xóa" -->
+                </tr>
+            </thead>
+            <tbody>
+                @for (var i = 0; i < Model.Count; i++)
+                {
+                    <tr>
+                        <td>@(i + 1)</td>
+                        <td>@Model[i].BillId</td>
+                        <td>@Model[i].DateCheckIn</td>
+                        <td>@Model[i].DateCheckOut</td>
+                        <td>@Model[i].TenTableFood</td>
+                        <td>@Model[i].TenNhanVien</td>
+                        <td>@Model[i].TenKhachHang</td>
+                        <td>@Model[i].TotalValue</td>
+                        <td>
+                            @if (Model[i].BillInfoViewModels != null && Model[i].BillInfoViewModels.Any())
+                            {
+                                <table class="nested-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã hóa đơn</th>
+                                            <th>Tên món ăn</th>
+                                            <th>Số lượng</th>
+                                            <th>Giá</th>
+                                            <th>Thành tiền</th>
+                                            <th>Giảm giá</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var billInfo in Model[i].BillInfoViewModels)
+                                        {
+                                            <tr>
+                                                <td>@billInfo.IdBill</td>
+                                                <td>@billInfo.FoodName</td>
+                                                <td>@billInfo.Count</td>
+                                                <td>@billInfo.Price</td>
+                                                <td>@billInfo.TotalPrice</td>
+                                                <td>@billInfo.GiamGia</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <p>Không có chi tiết hóa đơn.</p>
+                            }
+                        </td>
+                        <td>
+                            <!-- Thêm nút "Xóa" -->
+                            <button class="delete-button" data-bill-id="@Model[i].BillId">Xóa</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Không có dữ liệu hóa đơn.</p>
+    }
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Lắng nghe sự kiện khi một nút Delete được kích hoạt
+            document.querySelectorAll(".delete-button").forEach(function (button) {
+                button.addEventListener("click", function () {
+                    // Lấy idBill từ thuộc tính data-bill-id
+                    var idBill = this.getAttribute("data-bill-id");
+
+                    // Gửi yêu cầu xóa đến Controller
+                    fetch(`/Admin_XemBill/DeleteBill/${idBill}`, {
+                        method: 'POST',
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                // Nếu xóa thành công, làm gì đó (ví dụ: làm mới trang)
+                                location.reload();
+                            } else {
+                                // Xử lý lỗi nếu cần
+                                console.error('Lỗi khi xóa hóa đơn:', response.statusText);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Lỗi khi xóa hóa đơn:', error);
+                        });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

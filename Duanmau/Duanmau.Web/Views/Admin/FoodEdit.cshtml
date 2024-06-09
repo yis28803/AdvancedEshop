@@ -1,0 +1,99 @@
+﻿<!-- Views/Admin/EditFood.cshtml -->
+@model Duanmau.Web.API.Models.Food
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Size</title>
+    <!-- Add Bootstrap CSS link here -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <!-- Add your custom styles here -->
+</head>
+<body>
+    <style>
+        /* EditFoodStyles.css */
+        /* Bố cục và kiểu chung cho form */
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style cho các label */
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        /* Style cho input và select */
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        /* Style cho các nút */
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            button[type="submit"]:hover {
+                background-color: #45a049;
+            }
+    </style>
+
+
+    <h2>Edit Food</h2>
+
+    <form asp-controller="Admin" asp-action="FoodSaveEdited" method="post">
+        <div class="form-group">
+            <label for="FoodName">Food Name:</label>
+            <input type="text" class="form-control" id="FoodName" name="FoodName" value="@Model.FoodName" required>
+        </div>
+
+        <div class="form-group">
+            <label for="Price">Price:</label>
+            <input type="text" class="form-control" id="Price" name="Price" value="@Model.Price" required>
+        </div>
+
+        <div class="form-group">
+            <label for="Status">Status:</label>
+            <input type="text" class="form-control" id="Status" name="Status" value="@Model.Status" required>
+        </div>
+
+        <div class="form-group">
+            <label for="Mota">Description:</label>
+            <textarea class="form-control" id="Mota" name="Mota" rows="3">@Model.Mota</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="RemainingQuantity">Remaining Quantity:</label>
+            <input type="text" class="form-control" id="RemainingQuantity" name="RemainingQuantity" value="@Model.RemainingQuantity" required>
+        </div>
+
+        <!-- Add other fields as needed -->
+
+        <input type="hidden" asp-for="FoodId" />
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a asp-controller="Admin" asp-action="FoodAll" class="btn btn-secondary">Back</a>
+    </form>
+
+</body>
+</html>
+

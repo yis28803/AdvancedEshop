@@ -1,0 +1,119 @@
+﻿@model Duanmau.Web.API.Models.LoginViewModel
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        fieldset {
+            width: 400px; /* Tăng kích thước của fieldset */
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        legend {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: inline-block; /* Hiển thị label trên cùng 1 dòng */
+            width: 120px; /* Đặt độ rộng của label */
+            margin-bottom: 5px;
+            text-align: left;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .password-toggle {
+            position: relative;
+        }
+
+            .password-toggle input[type="password"] {
+                padding-right: 30px;
+            }
+
+            .password-toggle .toggle-password {
+                position: absolute;
+                top: 50%;
+                right: 10px;
+                transform: translateY(-50%);
+                cursor: pointer;
+            }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+<body>
+    <form asp-action="Login" method="post">
+        <fieldset>
+            <legend>Đăng nhập</legend>
+            <table>
+                <tr>
+                    <td><label for="Username">Tên đăng nhập:</label></td>
+                    <td><input type="text" asp-for="Username" class="form-control" /></td>
+                </tr>
+                <tr class="password-toggle">
+                    <td><label for="Pass">Mật khẩu:</label></td>
+                    <td>
+                        <input type="password" asp-for="Pass" class="form-control" />
+                        <span class="toggle-password" onclick="togglePasswordVisibility(this)">👁️</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center; padding-top: 10px;">
+                        <button type="submit" class="btn btn-primary">Đăng nhập</button>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </form>
+
+    <script>
+        function togglePasswordVisibility(element) {
+            var passwordInput = element.previousElementSibling;
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                element.textContent = "🔒";
+            } else {
+                passwordInput.type = "password";
+                element.textContent = "👁️";
+            }
+        }
+    </script>
+</body>
+</html>
+

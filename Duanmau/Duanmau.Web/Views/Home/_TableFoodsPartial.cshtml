@@ -1,0 +1,13 @@
+﻿@model List<Duanmau.Web.API.Models.Tablefood>
+<div class="row" style="margin-left: 5px; margin-top: 15px;">
+    @foreach (var tableFood in Model)
+    {
+        <div class="col-4" style="width: 200%; padding: 10px;">
+            <button style="width: 100%; color: @(tableFood.Status ? "blue" : "black");" onclick="selectTableFood('@tableFood.TablefoodName', '@tableFood.TablefoodId')">
+                <i class="fa-solid fa-house"></i><br>
+                <h5>@tableFood.TablefoodName</h5>
+            </button>
+        </div>
+    }
+</div>
+

@@ -1,0 +1,343 @@
+﻿@{
+    Layout = null; // Không sử dụng layout cho view này
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Error</title>
+</head>
+<body>
+    <h1>
+        Bạn Cần Đăng Nhập
+    </h1>
+
+    <a href="/Account2/Login">Đăng nhập</a>
+
+</body>
+</html>
+
+
+@* /*public async Task<IActionResult>
+    Index()
+    {
+    var foods = await GetFoodsAsync();
+    var danhMucFoods = await GetDanhMucFoodsAsync();
+    var tablefoods = await GetTableFoodsAsync();
+
+    if (foods == null || danhMucFoods == null || tablefoods == null)
+    {
+    return View("Error");
+    }
+
+    // Lấy thông tin token từ session
+    string jwtToken = HttpContext.Session.GetString("token");
+
+    // Giải mã token để lấy thông tin người dùng
+    string userId = JwtHelper.DecodeJwtToken(jwtToken);
+
+    // Truy xuất thông tin chi tiết của người dùng từ ID
+    var userDetails = await GetUserDetailsAsync(userId);
+
+    // Lưu thông tin chi tiết của người dùng vào ViewBag
+    ViewBag.UserDetails = userDetails;
+
+    // Trả về view với model item
+    return View((tablefoods, danhMucFoods));
+    }
+
+    private async Task<UserDetails>
+        GetUserDetailsAsync(string userId)
+        {
+        // Gửi yêu cầu API để lấy thông tin chi tiết của người dùng
+        var client = _clientFactory.CreateClient();
+        client.BaseAddress = new Uri("https://localhost:7152/");
+
+        var response = await client.GetAsync($"api/NhanVien/{userId}");
+
+        if (response.IsSuccessStatusCode)
+        {
+        var userDetailsString = await response.Content.ReadAsStringAsync();
+        var userDetails = JsonConvert.DeserializeObject<UserDetails>
+            (userDetailsString);
+            return userDetails;
+            }
+
+            return null;
+            }*/
+
+            /*public async Task<IActionResult>
+                Index()
+                {
+                var foods = await GetFoodsAsync();
+                var danhMucFoods = await GetDanhMucFoodsAsync();
+                var tablefoods = await GetTableFoodsAsync();
+                if (foods == null || danhMucFoods == null || tablefoods == null)
+                {
+                return View("Error");
+                }
+                ViewBag.HasToken = Session.GetString("token") != null;
+                var token = Session.GetString("token");
+                ViewBag.HasToken = token != null;
+                ViewBag.Token = token;
+
+                // Trả về view với model item
+                return View((tablefoods, danhMucFoods));
+                }*/
+                /*  public async Task<IActionResult>
+                    Index()
+                    {
+                    var foods = await GetFoodsAsync();
+                    var danhMucFoods = await GetDanhMucFoodsAsync();
+                    var tablefoods = await GetTableFoodsAsync();
+                    if (foods == null || danhMucFoods == null || tablefoods == null)
+                    {
+                    return View("Error");
+                    }
+                    ViewBag.HasToken = Session.GetString("token") != null;
+                    // Giải mã token
+                    var token = Session.GetString("token");
+                    ViewBag.HasToken = token != null;
+                    ViewBag.Token = token;
+
+                    if (token != null)
+                    {
+                    var secretKey = "YOUR_SECRET_KEY"; // Thay thế bằng mã bí mật được sử dụng để ký token
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var securityToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+                    var claims = securityToken.Claims;
+                    var nameId = claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
+                    ViewBag.NameId = nameId;
+                    }
+
+                    // Trả về view với model item
+                    return View((tablefoods, danhMucFoods));
+                    }*/ *@
+
+
+
+@* @if (ViewBag.HasToken)
+{
+    <p>Bạn đã đăng nhập thành công!</p>
+    <p>Token: @ViewBag.Token</p>
+    <p>Thông tin tài khoản:</p>
+    <ul>
+        <li>Tên người dùng: @ViewBag.UserDetails.Name</li>
+        <li>Email: @ViewBag.UserDetails.Email</li>
+        <!-- Các thông tin khác của người dùng có thể hiển thị tại đây -->
+    </ul>
+    <a href="/Account2/Logout">Đăng xuất</a>
+}
+else
+{
+    <a href="/Account2/Login">Đăng nhập</a>
+} *@
+@* @if (ViewBag.HasToken ?? false)
+{
+    <p>Bạn đã đăng nhập thành công!</p>
+    <p>Mã người dùng: @ViewBag.NameId</p>
+    <p>Token: @ViewBag.Token</p>
+    <a href="/Account2/Logout">Đăng xuất</a>
+}
+else
+{
+    <a href="/Account2/Login">Đăng nhập</a>
+} *@
+@* @if (ViewBag.HasToken ?? false)
+{
+    <p>Bạn đã đăng nhập thành công!</p>
+    <p>Token: @ViewBag.Token</p>
+    <a href="/Account2/Logout">Đăng xuất</a>
+}
+else
+{
+    <a href="/Account2/Login">Đăng nhập</a>
+} *@
+
+   @*  /*[HttpPost]
+        public async Task<IActionResult>
+    Login(LoginViewModel loginModel)
+    {
+    if (ModelState.IsValid)
+    {
+    var client = _clientFactory.CreateClient();
+    client.BaseAddress = new Uri("https://localhost:7152/");
+
+    var requestContent = new StringContent(JsonConvert.SerializeObject(loginModel), Encoding.UTF8, "application/json");
+    var response = await client.PostAsync("api/Account/login", requestContent);
+
+    if (response.IsSuccessStatusCode)
+    {
+    var token = await response.Content.ReadAsStringAsync();
+
+    // Lưu token vào session
+    HttpContext.Session.SetString("token", token);
+
+    return RedirectToAction("Index", "Home");
+    }
+    else
+    {
+    ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu không chính xác");
+    }
+    }
+
+    return View(loginModel);
+    }*/ *@
+
+    @* /*return RedirectToAction("Index", "Home");*/ *@
+
+    @* private readonly IHttpClientFactory _clientFactory;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+
+        public HomeController(IHttpClientFactory clientFactory, IHttpContextAccessor httpContextAccessor)
+        {
+            _clientFactory = clientFactory;
+            _httpContextAccessor = httpContextAccessor;
+        }
+        public ISession Session
+        {
+            get
+            {
+                return _httpContextAccessor.HttpContext.Session;
+            }
+        } *@
+
+
+
+    @* public async Task<IActionResult>
+    DanhMucFoodAll()
+    {
+    var client = _clientFactory.CreateClient();
+    client.BaseAddress = new Uri("https://localhost:7152/");
+    client.DefaultRequestHeaders.Accept.Clear();
+    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+    HttpResponseMessage response = await client.GetAsync("api/DanhMucFood");
+
+    if (response.IsSuccessStatusCode)
+    {
+    string responseContent = await response.Content.ReadAsStringAsync();
+    List<DanhMucFood>
+        danhMucFoods = JsonConvert.DeserializeObject<List<DanhMucFood>>(responseContent);
+
+                return View("DanhMucFoodAll", danhMucFoods);
+            }
+            else
+            {
+                // Xử lý trường hợp không thành công
+                return View("Error");
+            }
+        }
+
+        public IActionResult DanhMucFoodCreate()
+        {
+            return View("DanhMucFoodCreate");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DanhMucFoodSaveAsync(DanhMucFood danhMucFood)
+        {
+            // Kiểm tra xem các trường dữ liệu có giá trị null không
+            if (danhMucFood.DanhMucFoodName == null)
+            {
+                // Nếu một trong các trường là null, hiển thị thông báo lỗi và không thực hiện yêu cầu
+                ModelState.AddModelError("", "Vui lòng nhập đầy đủ thông tin.");
+                return View("DanhMucFoodCreate", danhMucFood); // Trả về view với dữ liệu đã nhập
+            }
+
+            var client = _clientFactory.CreateClient();
+            client.BaseAddress = new Uri("https://localhost:7152/");
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            string jsonDanhMucFood = JsonConvert.SerializeObject(danhMucFood);
+
+            var content = new StringContent(jsonDanhMucFood, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync("api/DanhMucFood", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("DanhMucFoodAll");
+            }
+            else
+            {
+                return View("DanhMucFoodCreate");
+            }
+        }
+
+        public async Task<IActionResult> DanhMucFoodEdit(int id)
+        {
+            var client = _clientFactory.CreateClient();
+            client.BaseAddress = new Uri("https://localhost:7152/");
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            HttpResponseMessage response = await client.GetAsync($"api/DanhMucFood/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseContent = await response.Content.ReadAsStringAsync();
+                DanhMucFood danhMucFood = JsonConvert.DeserializeObject<DanhMucFood>(responseContent);
+
+                return View("DanhMucFoodEdit", danhMucFood);
+            }
+            else
+            {
+                return View("Error");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DanhMucFoodSaveEditedAsync(DanhMucFood editedDanhMucFood)
+        {
+            // Kiểm tra xem các trường dữ liệu có giá trị null không
+            if (editedDanhMucFood.DanhMucFoodName == null)
+            {
+                // Nếu một trong các trường là null, hiển thị thông báo lỗi và không thực hiện yêu cầu
+                ModelState.AddModelError("", "Vui lòng nhập đầy đủ thông tin.");
+                return View("DanhMucFoodEdit", editedDanhMucFood); // Trả về view với dữ liệu đã nhập
+            }
+
+            var client = _clientFactory.CreateClient();
+            client.BaseAddress = new Uri("https://localhost:7152/");
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            string jsonEditedDanhMucFood = JsonConvert.SerializeObject(editedDanhMucFood);
+
+            var content = new StringContent(jsonEditedDanhMucFood, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PutAsync($"api/DanhMucFood/{editedDanhMucFood.DanhMucFoodId}", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("DanhMucFoodAll");
+            }
+            else
+            {
+                return View("Error");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DanhMucFoodDeleteAsync(int id)
+        {
+            var client = _clientFactory.CreateClient();
+            client.BaseAddress = new Uri("https://localhost:7152/");
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            HttpResponseMessage response = await client.DeleteAsync($"api/DanhMucFood/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("DanhMucFoodAll");
+            }
+            else
+            {
+                return View("Error");
+            }
+        } *@

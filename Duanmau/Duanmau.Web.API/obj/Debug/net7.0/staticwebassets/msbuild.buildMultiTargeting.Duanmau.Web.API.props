@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Duanmau.Web.API.props" />
+</Project>

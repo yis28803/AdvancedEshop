@@ -1,0 +1,134 @@
+﻿@model List<Duanmau.Web.API.Models.Food>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>BD Restaurant</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicons -->
+    <link href="/img/favicon.ico" rel="icon">
+    <link href="/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600|Nunito:600,700,800,900" rel="stylesheet">
+
+    <!-- Bootstrap CSS File -->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <!-- Main Stylesheet File -->
+    <link href="/css/style.css" rel="stylesheet">
+   <style>
+        .equal-size {
+            width: 100px;
+            height: 250px;
+        }
+
+        </style>
+</head>
+
+<body>
+
+    <main id="main">
+
+        <section id="food-menu">
+            <div class="container">
+                <header class="section-header">
+                    <h3>delicious Food Menu</h3>
+                </header>
+                <div class="row">
+
+                    @if (Model != null && Model.Count > 0)
+                    {
+                    @* @for (var i = 0; i < Model.Count; i++) *@
+                        @for (var i = 0; i < Model.Count; i++)
+                    {
+                        var food = Model[i];
+
+                       @*  <tr>
+                            <td>@(i + 1)</td>
+                            <td>@food.FoodName</td>
+                            <td>@food.Price</td>
+                            <td>@food.Status</td>
+                            <td>@food.Mota</td>
+                            <td>@food.RemainingQuantity</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(food.File))
+                                {
+                                    <img src="@food.File" alt="Food Image" style="max-width: 100px; max-height: 100px;" />
+                                }
+                                else
+                                {
+                                    <span>No image</span>
+                                }
+                            </td>
+                            <td>@food.DanhMucFoods.DanhMucFoodName</td>
+                        </tr> *@
+
+                            <div class="col-sm-6 col-md-4 col-lg-3">
+                                <div class="single-menu">
+
+                                    @if (!string.IsNullOrEmpty(food.File))
+                                    {
+                                        <img class="img-fluid equal-size" src="@food.File" />
+                                    }
+                                    else
+                                    {
+                                        <span>No image</span>
+                                    }
+                                    <h4>@food.FoodName</h4>
+                                    <span>@food.Price</span>
+                                    <p>@food.Mota.</p>
+
+                                </div>
+                            </div>
+                    }
+                    }
+                    else
+                    {
+                    <p>Không có dữ liệu sản phẩm.</p>
+                    }
+
+
+
+
+                    @* <div class="col-sm-6 col-md-4 col-lg-3">
+                        <div class="single-menu">
+                            <img class="img-fluid" src="/img/menu-4.jpg" />
+                            <h4>Lorem ipsum</h4>
+                            <span>$20.00 / Person</span>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing.</p>
+
+                        </div>
+                    </div> *@
+
+
+
+                    
+                    @* <div class="col-sm-6 col-md-4 col-lg-3 d-sm-none d-md-block d-lg-none">
+                        <div class="single-menu">
+                             <img class="img-fluid" src="/img/menu-4.jpg" />
+                            <h4>Vestibulum Posuere</h4>
+                            <span>$16.00 / Person</span>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing.</p>
+
+                        </div>
+                    </div> *@
+                </div>
+            </div>
+        </section>
+        <!-- Menu Section End-->
+
+    </main>
+
+
+
+    <!-- Main Javascript File -->
+    <script src="/js/main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+﻿@model int?
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Index</title>
+</head>
+<body>
+    <h1>Thông tin người dùng</h1>
+    @if (Model.HasValue)
+    {
+        <p>ID người dùng: @Model.Value</p>
+    }
+    else
+    {
+        <p>Người dùng chưa đăng nhập</p>
+    }
+</body>
+</html>

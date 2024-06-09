@@ -1,0 +1,104 @@
+﻿@model List<Duanmau.Web.API.Models.ProductStatistics3>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Thống kê doanh thu theo sản phẩm và tháng</title>
+    <!-- Add Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Thống kê doanh thu theo sản phẩm và tháng</h1>
+
+    <!-- Dropdown để chọn tháng -->
+    <label for="selectedMonth">Chọn tháng:</label>
+    <select id="selectedMonth">
+        <option value="1">Tháng 1</option>
+        <option value="2">Tháng 2</option>
+        <option value="3">Tháng 3</option>
+        <option value="4">Tháng 4</option>
+        <option value="5">Tháng 5</option>
+        <option value="6">Tháng 6</option>
+        <option value="7">Tháng 7</option>
+        <option value="8">Tháng 8</option>
+        <option value="9">Tháng 9</option>
+        <option value="10">Tháng 10</option>
+        <option value="11">Tháng 11</option>
+        <option value="12">Tháng 12</option>
+    </select>
+
+    <!-- Nút để thực hiện lọc -->
+    <button onclick="filterData()">Lọc</button>
+
+     <!-- Nút button để chuyển sang trang RevenueStatistics.cshtml -->
+<a class="btn btn-primary" href="/admin_thongke/RevenueStatistics">Xem Thống kê Doanh thu theo ngày</a>
+
+    <canvas id="productChart" width="400" height="150"></canvas>
+   
+
+    <script>
+        // Lấy dữ liệu từ Model và chuyển đổi thành mảng các tháng, sản phẩm và doanh thu tương ứng
+        var months = [];
+        var productNames = [];
+        var revenues = [];
+
+        @foreach (var item in Model)
+        {
+            <text>months.push(@item.Month);</text>
+            <text>productNames.push('@Html.Raw(System.Net.WebUtility.HtmlDecode(item.ProductName))');</text>
+            <text>revenues.push(@item.TotalRevenue);</text>
+        }
+
+        var ctx = document.getElementById('productChart').getContext('2d');
+        var productChart;
+
+        function updateChart(filteredProductNames, filteredRevenues) {
+            if (productChart) {
+                productChart.destroy(); // Hủy biểu đồ cũ trước khi vẽ biểu đồ mới
+            }
+
+            productChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: filteredProductNames,
+                    datasets: [{
+                        label: 'Doanh thu',
+                        data: filteredRevenues,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+
+        function filterData() {
+            var selectedMonth = document.getElementById("selectedMonth").value;
+
+            var filteredProductNames = [];
+            var filteredRevenues = [];
+
+            for (var i = 0; i < months.length; i++) {
+                if (months[i] == selectedMonth) {
+                    filteredProductNames.push(productNames[i]);
+                    filteredRevenues.push(revenues[i]);
+                }
+            }
+
+            updateChart(filteredProductNames, filteredRevenues);
+        }
+
+        // Khởi tạo biểu đồ với dữ liệu ban đầu
+        updateChart(productNames, revenues);
+    </script>
+</body>
+</html>

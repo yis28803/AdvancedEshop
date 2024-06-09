@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Layout</title>
+    <!-- Add Bootstrap CSS link here -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <!-- Add your custom styles here -->
+    <style>
+        body {
+            padding-top: 60px; /* Adjusted for fixed navbar height */
+        }
+        main {
+            padding: 20px;
+        }
+        .navbar {
+            background-color: #343a40;
+        }
+        .navbar-dark .navbar-nav .nav-link {
+            color: #ffffff;
+        }
+        .navbar-dark .navbar-toggler-icon {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+        <a class="navbar-brand" href="#">Admin Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/Index">Trang chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin_menu/Index">Menu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin_thongke/RevenueStatistics">Thông kê</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin_Xembill/GetBills">Xem Bill</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin_food/foodall">Thức ăn</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin_danhmucfood/DanhMucFoodAll">Danh mục</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin_ingredient/IngredientAll">Nguyên liệu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin_tablefood/TableFoodAll">Bàn ăn</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin_khachhang/KhachHangAll">Khách Hàng</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin_nhanvien/NhanVienAll">Nhân Viên</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container-fluid">
+        @RenderBody()
+    </main>
+
+    <!-- Add Bootstrap JS and Popper.js script links here -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+</html>

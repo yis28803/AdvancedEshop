@@ -1,0 +1,54 @@
+﻿@model List<Duanmau.Web.API.Models.ProductStatistics2>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Thống kê sản phẩm</title>
+    <!-- Add Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Thống kê sản phẩm theo doanh thu và số lượng bán trong tháng này</h1>
+    <a class="btn btn-primary" href="/admin_thongke/RevenueStatistics">Xem Thống kê Doanh thu theo ngày</a>
+
+    <canvas id="productChart" width="400" height="150"></canvas>
+
+    <script>
+        // Lấy dữ liệu từ Model và chuyển đổi thành mảng các tên sản phẩm, doanh thu và số lượng bán tương ứng
+        var productNames = @Html.Raw(Json.Serialize(Model.Select(item => item.ProductName)));
+        var totalRevenues = @Html.Raw(Json.Serialize(Model.Select(item => item.TotalRevenue)));
+        var totalQuantities = @Html.Raw(Json.Serialize(Model.Select(item => item.TotalQuantitySold)));
+
+        var ctx = document.getElementById('productChart').getContext('2d');
+        var productChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: productNames,
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: totalRevenues,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Số lượng bán',
+                    data: totalQuantities,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+</body>
+</html>

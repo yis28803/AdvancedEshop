@@ -1,0 +1,50 @@
+﻿<h2>Thành Công</h2>
+
+@* [HttpPost]
+        public IActionResult Checkout(string tableData, string idtablefood)
+        {
+            var extractedData = new List<CheckoutItem>
+    ();
+
+    if (!string.IsNullOrEmpty(tableData))
+    {
+    var dataDict = JsonConvert.DeserializeObject<Dictionary<int, dynamic>>(tableData);
+
+                foreach (var kvp in dataDict)
+                {
+                    if (kvp.Key == int.Parse(idtablefood))
+                    {
+                        var key = kvp.Key;
+                        var foodTable = kvp.Value.foodTable.ToString();
+                        var totalValueString = kvp.Value.totalValue.ToString();
+                        var totalValueDecimal = ExtractDecimalValue(totalValueString);
+
+                        var foodItems = ExtractFoodItems(foodTable);
+
+                        extractedData.Add(new CheckoutItem { Key = key, FoodItems = foodItems, TotalValue = totalValueDecimal });
+
+                        break;
+                    }
+                }
+            }
+
+            return PartialView("_CheckoutPartial", extractedData);
+        } *@
+@* <button  onclick="thanhToan()">Thanh toán</button> *@
+@* <div id="hello1"></div> *@
+@*  function thanhToan() {
+            var idtablefood = $('#selectedTablefoodId').text().trim();
+            $.ajax({
+                url: '/Home/Checkout',
+                type: 'POST',
+                data: { tableData: JSON.stringify(tableData), idtablefood: idtablefood },
+                success: function (data) {
+                    $('#hello1').html(data);
+                    clearTableData();
+                    openTable();
+                },
+                error: function () {
+                    alert('Đã xảy ra lỗi khi thanh toán.');
+                }
+            });
+        } *@

@@ -1,0 +1,66 @@
+﻿@model List<Duanmau.Web.Models.CheckoutItem>
+
+@if (Model != null && Model.Any())
+{
+    <form asp-controller="Home" asp-action="CreateBillAndBillInfo" method="post">
+        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+            <label for="dateCheckIn">Ngày check in:</label>
+            <input type="datetime" id="dateCheckIn" name="dateCheckIn" value="@DateTime.Now" required>
+            <label for="dateCheckOut">Ngày check out:</label>
+            <input type="datetime" id="dateCheckOut" name="dateCheckOut" value="@DateTime.Now" required>
+        </div>
+        <div style="border: 2px solid red; padding: 10px; margin-bottom: 10px;">
+            <label for="idNhanVien">ID Nhân viên:</label>
+            <input type="number" id="idNhanVien" name="idNhanVien" value="@ViewBag.UserId" required>
+
+            <label for="IdTableFood">ID Tablefood:</label>
+            <input type="number" id="IdTableFood" name="idTableFood" value="@Model.FirstOrDefault()?.Key" required>
+
+            <label for="idKhachHang">ID Khách hàng:</label>
+            <select class="form-control" id="idKhachHang" name="idKhachHang">
+                @foreach (var KhachHang in ViewBag.KhachHangsList)
+                {
+                    <option value="@KhachHang.Id">@KhachHang.Name</option>
+                }
+            </select>
+
+
+
+
+            
+        </div>
+        @foreach (var checkoutItem in Model)
+        {
+            foreach (var foodItem in checkoutItem.FoodItems)
+            {
+                <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                    <label for="idFood">ID Food:</label>
+                    <input name="billInfos[@foodItem.IDFood].idFood" value="@foodItem.IDFood" />
+
+                    <label for="count">Số lượng:</label>
+                    <input name="billInfos[@foodItem.IDFood].count" value="@foodItem.Quantity" />
+
+                    <label for="price">Đơn giá:</label>
+                    <input name="billInfos[@foodItem.IDFood].price" value="@foodItem.Price" />
+
+                    <label for="totalPrice">Thành tiền:</label>
+                    <input name="billInfos[@foodItem.IDFood].totalPrice" value="@foodItem.TotalPrice" />
+
+                    <label for="giamGia">Giảm giá:</label>
+                    <input name="billInfos[@foodItem.IDFood].giamGia" value="Không có giảm giá" />
+                </div>
+            }
+        }
+        <div>
+            <label for="TotalValue">Tổng tiền:</label>
+            <input type="number" id="TotalValue" name="totalValue" value="@Model.FirstOrDefault()?.TotalValue" required>
+        </div>
+        <div style="text-align: center;">
+            <button type="submit">Thêm bill</button>
+        </div>
+    </form>
+}
+else
+{
+    <p>Không có dữ liệu để hiển thị</p>
+}
